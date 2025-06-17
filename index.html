@@ -4,30 +4,513 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fatih Zain Store</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com">  const filterKategori = document.getElementById('filterKategori');
+  filterKategori.addEventListener('change', function () {
+    const kategori = this.value.toLowerCase();
+    const keyword = searchInput.value.toLowerCase();
+    const products = document.querySelectorAll('.grid > div');
+    products.forEach(product => {
+      const text = product.innerText.toLowerCase();
+      const matchKeyword = text.includes(keyword);
+      const matchKategori = kategori === '' || text.includes(kategori);
+      product.style.display = (matchKeyword && matchKategori) ? 'block' : 'none';
+    });
+  });
+function updateCartCount() {
+  document.getElementById('cartCount').innerText = cart.length;
+}
+</script>
 </head>
-<body class="bg-gray-50 font-sans">
-  <div class="max-w-5xl mx-auto py-6 px-4">
-    <h1 class="text-3xl font-bold text-center text-green-700 mb-6">Fatih Zain Store</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <!-- Produk 1 -->
-      <div class="bg-white rounded-2xl shadow p-4">
-        <img src="https://cdn.orderonline.id/site-assets/products/2023-05-16/1684217439376.jpg" alt="Al-Qur'an Cordoba A5" class="w-full h-64 object-cover rounded-xl mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Al-Qur'an Cordoba A5</h2>
-        <p class="text-green-600 font-bold text-lg">Rp 115.000</p>
-        <p class="text-sm text-gray-600 mt-2">Mushaf Al-Qur'an ukuran A5 dengan terjemahan dan tajwid berwarna.</p>
-        <a href="https://wa.me/6281224626311?text=Halo%2C%20saya%20ingin%20pesan%20produk%20Al-Qur'an%20Cordoba%20A5" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">Pesan via WhatsApp</a>
-      </div>
+<body class="bg-gradient-to-br from-green-100 via-white to-green-50 font-sans">
+  <div class="max-w-7xl mx-auto py-6 px-4">
+    <h1 class="text-3xl font-bold text-center text-green-700 mb-4">Fatih Zain Store</h1>
 
-      <!-- Produk 2 -->
-      <div class="bg-white rounded-2xl shadow p-4">
-        <img src="https://cdn.orderonline.id/site-assets/products/2023-05-16/1684217545346.jpg" alt="Al-Qur'an Tikrar B5" class="w-full h-64 object-cover rounded-xl mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Al-Qur'an Hafalan Tikrar B5</h2>
-        <p class="text-green-600 font-bold text-lg">Rp 135.000</p>
-        <p class="text-sm text-gray-600 mt-2">Cocok untuk program hafalan Al-Qur'an dengan metode Tikrar.</p>
-        <a href="https://wa.me/6281224626311?text=Halo%2C%20saya%20ingin%20pesan%20produk%20Al-Qur'an%20Hafalan%20Tikrar%20B5" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">Pesan via WhatsApp</a>
+    <!-- Tombol Lihat Katalog PDF -->
+    <div class="text-center mb-8">
+      <a href="katalog.pdf" target="_blank" class="inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">📄 Lihat Katalog Lengkap (PDF)</a>
+    </div>
+
+    <!-- Fitur Pencarian dan Filter Produk -->
+<div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  <input type="text" id="searchInput" placeholder="Cari produk..." class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+  <select id="filterKategori" class="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+    <option value="">Semua Kategori</option>
+    <option value="Mushaf Besar">Mushaf Besar</option>
+    <option value="Mushaf Tanggung">Mushaf Tanggung</option>
+    <option value="Mushaf Sedang">Mushaf Sedang</option>
+    <option value="Mushaf Kecil">Mushaf Kecil</option>
+    <option value="Mushaf Jumbo">Mushaf Jumbo</option>
+    <option value="Buku Iqra">Buku Iqra</option>
+    <option value="Buku Anak">Buku Anak</option>
+  </select>
+</div>
+
+<!-- Keranjang Belanja -->
+<div class="mb-6 flex justify-end">
+  <button onclick="toggleCart()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">
+    🛒 Lihat Keranjang (<span id="cartCount">0</span>)
+  </button>
+</div>
+
+<!-- Popup Keranjang -->
+<div id="cartModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
+    <h3 class="text-xl font-bold mb-4 text-green-700">🛍️ Keranjang Anda</h3>
+    <ul id="cartList" class="space-y-2 mb-4 text-sm text-gray-700"></ul>
+    <button onclick="checkoutCart()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl mb-2">Checkout via WhatsApp</button>
+    <button onclick="clearCart()" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl mb-2">Hapus Semua</button>
+    <button onclick="closeCart()" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded-xl">Tutup</button>
+  </div>
+</div>
+
+$1grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Contoh produk, sisanya akan ditambahkan seperti ini -->
+      <!-- Gunakan loop/template jika pakai framework -->
+      <!-- Contoh produk ditaruh di sini secara manual karena bukan framework dinamis -->
+      
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between transition-transform duration-200 hover:scale-[1.02] min-h-[300px]">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Jumbo</p>
+    <h2 class="text-lg font-semibold text-gray-800">MUSHAF KABIR</h2>
+    <p class="text-green-600 font-bold">Rp199.000</p>
+    <p class="text-sm text-gray-600">Ukuran: B4 - Jumbo</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk MUSHAF KABIR" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class=\"bg-white rounded-2xl shadow p-4 flex flex-col justify-between transition-transform duration-200 hover:scale-105\">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Besar</p>
+    <h2 class="text-lg font-semibold text-gray-800">NEW TARTIL</h2>
+    <p class="text-green-600 font-bold">Rp189.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A4 - Besar</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk NEW TARTIL" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Tanggung</p>
+    <h2 class="text-lg font-semibold text-gray-800">MUSHAF TILAWAH</h2>
+    <p class="text-green-600 font-bold">Rp189.000</p>
+    <p class="text-sm text-gray-600">Ukuran: B5 - Tanggung</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk MUSHAF TILAWAH" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">LANJUTAN IQRA 6</h2>
+    <p class="text-green-600 font-bold">Rp59.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk LANJUTAN IQRA 6" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-MUBTADI</h2>
+    <p class="text-green-600 font-bold">Rp88.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-MUBTADI" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-AKROM A5</h2>
+    <p class="text-green-600 font-bold">Rp59.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-AKROM A5" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Tanggung</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-AKROM B5</h2>
+    <p class="text-green-600 font-bold">Rp69.000</p>
+    <p class="text-sm text-gray-600">Ukuran: B5 - Tanggung</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-AKROM B5" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Besar</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-AKROM PER JUZ</h2>
+    <p class="text-green-600 font-bold">Rp189.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A4 - Besar</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-AKROM PER JUZ" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Kecil</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ REGULER</h2>
+    <p class="text-green-600 font-bold">Rp59.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A6 - Kecil</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ REGULER" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ MILLENIAL</h2>
+    <p class="text-green-600 font-bold">Rp86.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ MILLENIAL" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Besar</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ KABAH</h2>
+    <p class="text-green-600 font-bold">Rp180.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A4 - Besar</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ KABAH" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ METALLIZING</h2>
+    <p class="text-green-600 font-bold">Rp89.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ METALLIZING" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ MOROCCO</h2>
+    <p class="text-green-600 font-bold">Rp89.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ MOROCCO" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ PERKATA MILENIAL</h2>
+    <p class="text-green-600 font-bold">Rp89.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ PERKATA MILENIAL" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ PERKATA METALLIZING</h2>
+    <p class="text-green-600 font-bold">Rp89.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ PERKATA METALLIZING" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HUFAZ JUNIOR</h2>
+    <p class="text-green-600 font-bold">Rp105.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HUFAZ JUNIOR" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Besar</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HAFIZ REGULER</h2>
+    <p class="text-green-600 font-bold">Rp149.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A4 - Besar</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HAFIZ REGULER" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-HAFIZ MILLENIAL</h2>
+    <p class="text-green-600 font-bold">Rp86.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-HAFIZ MILLENIAL" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-ITQAN</h2>
+    <p class="text-green-600 font-bold">Rp89.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-ITQAN" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Mushaf Sedang</p>
+    <h2 class="text-lg font-semibold text-gray-800">AL-MUTQIN</h2>
+    <p class="text-green-600 font-bold">Rp55.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk AL-MUTQIN" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 1-6 CORDOBA</h2>
+    <p class="text-green-600 font-bold">Rp28.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 1-6 CORDOBA" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 1-6 GESPER</h2>
+    <p class="text-green-600 font-bold">Rp33.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 1-6 GESPER" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 1-6 WAFA</h2>
+    <p class="text-green-600 font-bold">Rp30.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 1-6 WAFA" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 1-6 PLASTIK</h2>
+    <p class="text-green-600 font-bold">Rp25.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 1-6 PLASTIK" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 1-6 MOTIF ANAK</h2>
+    <p class="text-green-600 font-bold">Rp27.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 1-6 MOTIF ANAK" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Anak</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA BOARD BOOK (ANAK)</h2>
+    <p class="text-green-600 font-bold">Rp85.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA BOARD BOOK (ANAK)" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    <div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA HARD COVER PITA</h2>
+    <p class="text-green-600 font-bold">Rp35.000</p>
+    <p class="text-sm text-gray-600">Ukuran: B5 - Tanggung</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA HARD COVER PITA" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 6 WARNA-WARNI</h2>
+    <p class="text-green-600 font-bold">Rp35.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 6 WARNA-WARNI" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+  <div>
+    <p class="text-xs text-gray-500 mb-1">Kategori: Buku Iqra</p>
+    <h2 class="text-lg font-semibold text-gray-800">IQRA 6 KANAK-KANAK</h2>
+    <p class="text-green-600 font-bold">Rp35.000</p>
+    <p class="text-sm text-gray-600">Ukuran: A5 - Sedang</p>
+  </div>
+  <a href="https://wa.me/6281224626311?text=Halo, saya ingin pesan produk IQRA 6 KANAK-KANAK" target="_blank" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm text-center">Pesan via WhatsApp</a>
+</div>
+    </div>
+
+    <!-- Testimoni Pelanggan -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold text-center text-green-700 mb-6">Apa Kata Pelanggan Kami?</h2>
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="bg-white rounded-xl p-6 shadow">
+          <p class="text-gray-700 italic">“Alhamdulillah, Qur’an hafalan yang saya pesan sangat membantu proses menghafal. Pelayanannya cepat dan ramah!”</p>
+          <p class="text-sm text-gray-500 mt-4">– Ahmad, Surabaya</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow">
+          <p class="text-gray-700 italic">“Produknya bagus, pengiriman cepat, dan harga terjangkau. Terima kasih Fatih Zain Store.”</p>
+          <p class="text-sm text-gray-500 mt-4">– Nurul, Bandung</p>
+        </div>
       </div>
     </div>
+
+  <div class="grid gap-6 md:grid-cols-2 mt-6">
+        <div class="bg-white rounded-xl p-6 shadow">
+          <p class="text-gray-700 italic">“Pelayanan adminnya cepat tanggap dan ramah. Saya sangat puas dengan kualitas Al-Qur'annya.”</p>
+          <p class="text-sm text-gray-500 mt-4">– Siti, Jakarta</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow">
+          <p class="text-gray-700 italic">“Sangat bermanfaat untuk hadiah pengajian. Kemasannya bagus dan pengiriman aman.”</p>
+          <p class="text-sm text-gray-500 mt-4">– Rahmat, Yogyakarta</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow">
+          <p class="text-gray-700 italic">“Sudah dua kali order dan selalu puas. Harga bersaing dan banyak pilihan Qur’an.”</p>
+          <p class="text-sm text-gray-500 mt-4">– Fadli, Makassar</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow">
+          <p class="text-gray-700 italic">“Al-Qur’annya indah dan mudah dibaca. Terima kasih Fatih Zain Store, sukses selalu!”</p>
+          <p class="text-sm text-gray-500 mt-4">– Lina, Medan</p>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
+<script>
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  function updateCartCount() {
+    document.getElementById('cartCount').innerText = cart.length;
+  }
+  updateCartCount();
+
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', function () {
+    const keyword = this.value.toLowerCase();
+    const products = document.querySelectorAll('.grid > div');
+    products.forEach(product => {
+      const text = product.innerText.toLowerCase();
+      product.style.display = text.includes(keyword) ? 'block' : 'none';
+    });
+  });
+</script>
+<script>
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', function () {
+    const keyword = this.value.toLowerCase();
+    const products = document.querySelectorAll('.grid > div');
+    products.forEach(product => {
+      const text = product.innerText.toLowerCase();
+      product.style.display = text.includes(keyword) ? 'block' : 'none';
+    });
+  });
+
+  // Fitur keranjang sederhana
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+updateCartCount();
+  function addToCart(name, price) {
+    if (!cart.some(item => item.name === name)) {
+      cart.push({ name, price });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      alert(`${name} telah ditambahkan ke keranjang!`);
+      event.target.innerText = '✔ Ditambahkan';
+      event.target.disabled = true;
+      event.target.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+      event.target.classList.add('bg-gray-400');
+    } else {
+      alert(`${name} sudah ada di keranjang.`);
+    }
+  });
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+  alert(`${name} telah ditambahkan ke keranjang!`);
+});
+    document.getElementById('cartCount').innerText = cart.length;
+    alert(`${name} telah ditambahkan ke keranjang!`);
+  }
+  function toggleCart() {
+    if (cart.length === 0) {
+      alert("Keranjang masih kosong.");
+    } else {
+      const summary = cart.map(item => `• ${item.name} - ${item.price}`).join("
+");
+      const encodedMessage = encodeURIComponent(`Saya ingin memesan:
+
+${summary}`);
+      window.open(`https://wa.me/6281224626311?text=${encodedMessage}`, '_blank');
+    }
+  } else {
+    const summary = cart.map(item => `• ${item.name} - ${item.price}`).join("
+");
+    const encodedMessage = encodeURIComponent(`Saya ingin memesan:
+
+${summary}`);
+    window.open(`https://wa.me/6281224626311?text=${encodedMessage}`, '_blank');
+  }
+} else {
+      const summary = cart.map(item => `• ${item.name} - ${item.price}`).join("
+");
+      alert(`Isi Keranjang Anda:
+
+${summary}`);
+    }
+  }
+  function toggleCart() {
+    const modal = document.getElementById('cartModal');
+    const list = document.getElementById('cartList');
+    list.innerHTML = '';
+    if (cart.length === 0) {
+      list.innerHTML = '<li class="text-gray-500">Keranjang masih kosong.</li>';
+    } else {
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<div class='flex justify-between items-center'><span>• ${item.name} - ${item.price}</span><button onclick='removeFromCart(${index})' class='text-red-500 hover:underline text-xs'>Hapus</button></div>`;
+        list.appendChild(li);
+      });
+    }
+    modal.classList.remove('hidden');
+  }
+
+  function closeCart() {
+    document.getElementById('cartModal').classList.add('hidden');
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    toggleCart();
+  }
+
+  function clearCart() {
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    closeCart();
+  }
+
+  function checkoutCart() {
+    if (cart.length === 0) return;
+    const summary = cart.map(item => `• ${item.name} - ${item.price}`).join("
+");
+    const encodedMessage = encodeURIComponent(`Saya ingin memesan:
+
+${summary}`);
+    window.open(`https://wa.me/6281224626311?text=${encodedMessage}`, '_blank');
+  }
+</script>
 </body>
 </html>
