@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konten Islami - Fatih Digital Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f172a;
+      color: white;
+      line-height: 1.6;
+    }
+    header {
+      background: url('https://i.ibb.co/3NQ0G3W/bg-masjid.jpg') center/cover no-repeat;
+      padding: 5rem 1rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 3rem;
+      color: #fff;
+      font-weight: 700;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #facc15;
+      margin-top: 0.5rem;
+    }
+    section {
+      padding: 3rem 1.5rem;
+      max-width: 960px;
+      margin: auto;
+    }
+    h2 {
+      color: #facc15;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding-left: 1rem;
+    }
+    ul li::before {
+      content: '✔️';
+      margin-right: 0.5rem;
+      color: #facc15;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #facc15;
+      color: #1e293b;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 2rem;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background-color: #eab308;
+    }
+    .testimonial {
+      background-color: #1e293b;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-left: 5px solid #facc15;
+      border-radius: 6px;
+    }
+    .highlight {
+      color: #facc15;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #0f172a;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Konten Islami Premium</h1>
+    <p>Dakwah Modern • Desain Menarik • Siap Posting</p>
+  </header>
+
+  <section>
+    <h2>📌 Apa Itu <span class="highlight">Konten Islami</span>?</h2>
+    <p>Kumpulan desain Islami eksklusif yang bisa langsung dipakai untuk dakwah harian di media sosial. Tersedia dalam format gambar dan video, bisa diedit dengan mudah via Canva.</p>
+    
+    <h2>✨ Fitur Unggulan</h2>
+    <ul>
+      <li>Ratusan konten Islami siap pakai</li>
+      <li>Editable di Canva (tinggal ganti nama/logo)</li>
+      <li>Cocok untuk Instagram, TikTok, WA Story</li>
+      <li>Akses seumur hidup</li>
+    </ul>
+
+    <h2>🎁 Bonus Spesial</h2>
+    <ul>
+      <li>Tutorial edit Canva untuk pemula</li>
+      <li>Akses grup sharing konten & inspirasi</li>
+      <li>Update konten berkala tanpa biaya tambahan</li>
+    </ul>
+
+    <h2>💬 Testimoni</h2>
+    <div class="testimonial">“Kontennya super bagus dan bisa langsung dipakai. Sangat membantu!” — <strong>@aisyah_dakwah</strong></div>
+    <div class="testimonial">“Desainnya kekinian, cocok banget buat dakwah di IG & TikTok.” — <strong>@ustadz.fajar</strong></div>
+
+    <h2>💳 Harga Promo</h2>
+    <p>Cukup <span class="highlight">Rp49.000</span> saja! Bayar sekali, akses selamanya tanpa batas.</p>
+    
+    <a class="btn" href="https://wa.me/6281224626311?text=Assalamualaikum%2C+saya+mau+beli+Konten+Islami">BELI SEKARANG via WhatsApp</a>
+  </section>
+
+  <footer>
+    &copy; 2025 Fatih Digital Store — Menyebar Dakwah Lewat Desain.
+  </footer>
+
+</body>
+</html>
